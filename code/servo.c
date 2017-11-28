@@ -19,7 +19,7 @@ void servo_setup(){
 // this function takes in a reading value
 // 	assumed to be a 10 bit value(like an analog sensor would read)
 // 	and a motor, motor 0 changes oin 11, motor 1 change pin 10
-void set_motor(int reading, bool motor){
+void set_motor(int reading, int motor){
 	if (motor == 0)
 		ORC1A = map(reading, 0, 1024, 63,125);
 	if (motor == 1)
