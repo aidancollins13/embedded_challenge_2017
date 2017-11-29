@@ -1,11 +1,10 @@
 #include <SPI.h>
 #include "RF24.h"
+#include "wirelessModule.h"
 
 bool radioNumber = 1; // or 1
-RF24 radio(7,8);
-byte addresses[][5] = {"15_T","15_R"};
 
-void setup(){
+void recieve_setup(){
 	Serial.begin(9600);
 	radio.begin();
 	radio.setPALevel(RF24_PA_LOW);
@@ -21,9 +20,8 @@ void setup(){
 	//radio.stopListening(); // makes sure we are not recieving
 }
 
-void loop(){
-	while (radio.available()){
-		radio.read(...);
-	}
-
+void recieve(uint32_t *msg){
+	if (radio.available())
+		radio.read(&msg, ...);
+	return NULL;
 }

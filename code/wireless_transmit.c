@@ -1,11 +1,9 @@
 #include <SPI.h>
 #include "RF24.h"
-
+#include "wirelessModule.h"
 bool radioNumber = 0; // or 1
-RF24 radio(7,8);
-byte addresses[][5] = {"15_T","15_R"};
 
-void setup(){
+void transmit_setup(){
 	Serial.begin(9600);
 	radio.begin();
 	radio.setPALevel(RF24_PA_LOW);
@@ -21,7 +19,7 @@ void setup(){
 	radio.stopListening(); // makes sure we are not recieving
 }
 
-void loop(){
+uint32_t transmit(){
 	Serial.println("Test Sending");
 	radio.startListening();
 	unsigned long startTime = micros();
@@ -40,5 +38,3 @@ void loop(){
 	delay(10); // delayed for 10 ms
 
 }
-
-// git add and git commit
