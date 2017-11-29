@@ -1,2 +1,2 @@
 void servo_setup();
-void set_motor(int,int);
+void set_motor(int reading, int motor);
