@@ -7,7 +7,7 @@
 //
 
 // This sets up timer 1 to be fast pwm with a 256 prescaler
-// and a 1250 top, pins 11 and 10 are outputs.
+// and a 1250 top, pins 9 and 10 are outputs.
 void servo_setup(){
 
 	TCCR1A = 0b10100010;
@@ -18,7 +18,7 @@ void servo_setup(){
 
 // this function takes in a reading value
 // 	assumed to be a 10 bit value(like an analog sensor would read)
-// 	and a motor, motor 0 changes oin 11, motor 1 change pin 10
+// 	and a motor, motor 0 changes oin 9, motor 1 change pin 10
 void set_motor(int reading, int motor){
 	if (motor == 0)
 		ORC1A = map(reading, 0, 1024, 63,125);
