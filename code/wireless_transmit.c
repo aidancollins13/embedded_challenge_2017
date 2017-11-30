@@ -9,12 +9,12 @@ void transmit_setup(){
 	radio.begin();
 	radio.setPALevel(RF24_PA_LOW);
 	if (radioNumber){
-		radio.openWritingPipe(addresses[1]); // might be index 0 
-		radio.openReadingPipe(1,addresses[0]); // might be index 1
+		radio.openWritingPipe(addresses[0]); // might be index 0 
+		radio.openReadingPipe(1,addresses[1]); // might be index 1
 	}
 	else{
-		radio.openWritingPipe(addresses[0]); // might be index 1
-		radio.openReadingPipe(1,addresses[1]); // might be index 0
+		radio.openWritingPipe(addresses[1]); // might be index 1
+		radio.openReadingPipe(1,addresses[0]); // might be index 0
 	}
 	//radio.startListening(); only if recieving 
 	radio.stopListening(); // makes sure we are not recieving
