@@ -1,9 +1,10 @@
 #include <SPI.h>
 #include "RF24.h"
 #include "wirelessModule.h"
-bool radioNumber = 0; // or 1
+//bool radioNumber = 0; // or 1
 
 void transmit_setup(){
+	radioNumber = 0;
 	Serial.begin(9600);
 	radio.begin();
 	radio.setPALevel(RF24_PA_LOW);

@@ -1,6 +1,7 @@
 #include "RF24.h"
 
 //bool radioNumber = 1; // or 1
+bool radioNumber;
 RF24 radio(7,8);
 byte addresses[][5] = {"15_T","15_R"};
 
