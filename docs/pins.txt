@@ -5,11 +5,11 @@ Arduino 1
 11 - MOSI
 12 - MISO
 
-3 - Sensor 1 TRIG
-5 - Sensor 1 ECHO
+2 - Sensor 1 TRIG
+3 - Sensor 1 ECHO
 
-6 - Sensor 2 TRIG
-8 - Sensor 2 ECHO
+9 - Sensor 2 TRIG
+10 - Sensor 2 ECHO
 
 
 Arduino 2

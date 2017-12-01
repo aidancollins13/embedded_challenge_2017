@@ -1,3 +1,5 @@
+#include"servo.h"
+#include"Arduino.h"
 // 16-bit timer witha 265 prescaller set to fast pwm with ICR1 as top
 // ICR1 = 1250 
 // period = 20ms
@@ -19,10 +21,9 @@ void servo_setup(){
 // this function takes in a reading value
 // 	assumed to be a 10 bit value(like an analog sensor would read)
 // 	and a motor, motor 0 changes oin 9, motor 1 change pin 10
-void set_motor(int reading, int motor){
+void set_motor(int motor, int speed){
 	if (motor == 0)
-		ORC1A = map(reading, 0, 1024, 63,125);
+		ORC1A = map(speed, 0, 1024, 63,125);
 	if (motor == 1)
-		OCR1B = map(reading, 0, 124, 63, 125);
-
+		OCR1B = map(speed, 0, 124, 63, 125);
 }
