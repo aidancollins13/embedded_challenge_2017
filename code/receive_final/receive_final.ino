@@ -1,7 +1,9 @@
-#include<Arudino.h>
+
 #include"SPI.h"
 #include"RF24.h"
 
+RF24 radio(7,8);
+byte addresses[][5] = {"15_T", "15_R"};
 long readings[2];
 int radio_number = 1;
 void setup(){
@@ -12,7 +14,7 @@ void setup(){
 
 void loop(){
 
-	get_reading(&readings);
+	(&readings);
 	set_motor(0,readings[0]);
 	set_motor(0,readings[1]);
 	delay(100);
@@ -39,7 +41,7 @@ void wireless_setup(int radio_number){
 
 }
 
-void get_readings(&readings){
+void get_readings(long* &readings){
 
 	while(radio.available()){
 		radio.read(&readings, sizeof(long) *2);
