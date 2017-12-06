@@ -3,49 +3,64 @@
 #include"RF24.h"
 
 RF24 radio(7,8);
-byte addresses[][5] = {"15_T", "15_R"};
-long readings[2];
-int radio_number = 1;
+byte addresses[][6] = {"T_15"};
+int radio_number = 1; //receive
+
+struct motorControl
+{
+ long left;
+ long right;
+};
+
+typedef struct motorControl Package;
+Package readings;
+
 void setup(){
 	servo_setup();
 	wireless_setup(radio_number);
+  Serial.begin(9600);
 }
 
 
 void loop(){
-
-	(&readings);
-	set_motor(0,readings[0]);
-	set_motor(0,readings[1]);
+  
+	get_readings();
+  Serial.print("Received ");
+  Serial.print(readings.left);
+  Serial.print(" and ");
+  Serial.println(readings.right);
+	set_motor(0,readings.left);
+	set_motor(1,readings.right);
 	delay(100);
+  
 	
 }
 
 
 void wireless_setup(int radio_number){
 	radio.begin();
-	radio.setPALevel(RF24_PA_HIGH);
-
-	if(radio_number){ 	//receive
-		radio.openWritingPipe(addresses[1]);
-		radio.openReadingPipe(1,addresses[0]);
-	}
-
-	else{ 				//transmit
-		radio.openWritingPipe(addresses[0]);
-		radio.openReadingPipe(1,addresses[0]);
-
-	}
-
-	radio.startListening();
+  radio.setChannel(15);
+  radio.setPALevel(RF24_PA_MAX);
+  radio.setDataRate(RF24_250KBPS);
+  if(radio_number){
+    radio.openReadingPipe(1,addresses[0]);
+    radio.startListening();
+  }
+  else
+    radio.openWritingPipe(addresses[0]);
+  delay(1000);
 
 }
 
-void get_readings(long* &readings){
-
-	while(radio.available()){
-		radio.read(&readings, sizeof(long) *2);
- 	 }
+void get_readings(){
+  if(radio.available()){
+    while(radio.available()){
+      radio.read(&readings, sizeof(readings));
+    }
+  }
+  else
+    Serial.println("WIRELESS:\tradio not available");
+  
 }
 
 // This sets up timer 1 to be fast pwm with a 256 prescaler
@@ -63,7 +78,13 @@ void servo_setup(){
 // 	and a motor, motor 0 changes oin 9, motor 1 change pin 10
 void set_motor(int motor, int speed){
 	if (motor == 0)
-		OCR1A = map(speed, 3, 40, 63,125);
+    if(speed > 40) OCR1A = 93;
+		else OCR1A = map(speed, 3, 40, 63,125);
 	if (motor == 1)
-		OCR1B = map(speed, 3, 40, 63, 125);
+    if(speed > 40) OCR1B = 93;
+		else OCR1B = map(speed, 3, 40, 63, 125);
 }
+
+
+
+

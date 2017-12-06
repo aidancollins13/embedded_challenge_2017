@@ -7,7 +7,16 @@ byte addresses[][6] = {"15_TR", "15_RR"};
 int radio_number = 0;
 
 long s1,s0;
-long readings[2];
+
+struct motorControl
+{
+ long left;
+ long right;
+};
+
+typedef struct motorControl Package;
+Package readings;
+
 
 void setup(){
   Serial.begin(9600); 
@@ -16,10 +25,10 @@ void setup(){
 }
 
 void loop(){
-	s0 = read_dist(0);
-	s1 = read_dist(1);
+	readings.left = read_dist(0);
+  readings.right = read_dist(1);
 	
-	send_readings(s0,s1);
+	send_readings();
 	delay(100);
 
 }
@@ -56,58 +65,27 @@ long read_dist(int sensor){
 void sensor_setup(){
 	//DDRD |=   0b00100100; // set pin 2 and 5 as output
 	//DDRD &= !(0b01001000);//set pin 3 and 6 as input
-  //DDRD = 0b10100100;
-	//PORTD |= 0b01001000; //enable pullup on 3 and 6, the inputs
- pinMode(2, OUTPUT);
-  pinMode(3, INPUT);
-  pinMode(5, OUTPUT);
-  pinMode(6,INPUT);
+  DDRD = 0b10100100;
+	PORTD |= 0b01001000; //enable pullup on 3 and 6, the inputs
+
 }
 
 void wireless_setup(int radio_number){
 	radio.begin();
-	radio.setPALevel(RF24_PA_LOW);
-
-	if(radio_number){ 	//receive
-		radio.openWritingPipe(addresses[1]);
-		radio.openReadingPipe(1,addresses[0]);
-	}
-
-	else{ 				//transmit
-		radio.openWritingPipe(addresses[0]);
-		radio.openReadingPipe(1,addresses[1]);
-
-	}
-
-	radio.startListening();
+  radio.setChannel(15);
+  radio.setPALevel(RF24_PA_MAX);
+  radio.setDataRate(RF24_250KBPS);
+  if(radio_number){
+    radio.openReadingPipe(1,addresses[0]);
+    radio.startListening();
+  }
+  else
+    radio.openWritingPipe(addresses[0]);
+  delay(1000);
 
 }
 
-void send_readings(long s0, long s1){
-	readings[0] = s0;
-	readings[1] = 1;
-  Serial.println("A");
-	radio.stopListening();
-  Serial.println("B");
-  if (!radio.available())
-    Serial.println("Timed");
-  Serial.println("C");
-  unsigned long start_time = 2;
-	if(!radio.write(&start_time, sizeof(unsigned long))){
-		Serial.println("WIRELESS:\t failed");
- 	}
-  radio.startListening();
-    unsigned long started_waiting_at = micros();               // Set up a timeout period, get the current microseconds
-    boolean timeout = false;                                   // Set up a variable to indicate if a response was received or not
-    
-    while ( ! radio.available() ){                             // While nothing is received
-      if (micros() - started_waiting_at > 200000 ){            // If waited longer than 200ms, indicate timeout and exit while loop
-          timeout = true;
-          break;
-      }      
-    }
-        
-    if ( timeout )                                             // Describe the results
-        Serial.println(F("Failed, response timed out."));
-
+void send_readings(){
+  radio.write(&readings, sizeof(readings));
+  
 }
