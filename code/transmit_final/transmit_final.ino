@@ -1,10 +1,11 @@
 #include"SPI.h"
+#include<printf.h>
 #include"RF24.h"
 
 
 RF24 radio(7,8);
-byte addresses[][6] = {"15_TR", "15_RR"};
-int radio_number = 0;
+byte addresses[][6] = {"T_15"};
+int radio_number = 0; //transmit
 
 long s1,s0;
 
@@ -19,14 +20,15 @@ Package readings;
 
 
 void setup(){
-  Serial.begin(9600); 
+  Serial.begin(115200); 
+  printf_begin();
 	wireless_setup(radio_number);
 	sensor_setup();
 }
 
 void loop(){
 	readings.left = read_dist(0);
-  readings.right = read_dist(1);
+  //readings.right = read_dist(1);
 	
 	send_readings();
 	delay(100);
@@ -73,7 +75,7 @@ void sensor_setup(){
 void wireless_setup(int radio_number){
 	radio.begin();
   radio.setChannel(15);
-  radio.setPALevel(RF24_PA_MAX);
+  radio.setPALevel(RF24_PA_MIN);
   radio.setDataRate(RF24_250KBPS);
   if(radio_number){
     radio.openReadingPipe(1,addresses[0]);
@@ -86,6 +88,8 @@ void wireless_setup(int radio_number){
 }
 
 void send_readings(){
-  radio.write(&readings, sizeof(readings));
+  if(!radio.write(&readings, sizeof(readings)))
+    Serial.println("WIRELESS\twrite failed");
+  radio.printDetails();
   
 }

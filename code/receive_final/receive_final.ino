@@ -1,6 +1,8 @@
 
 #include"SPI.h"
 #include"RF24.h"
+#include<printf.h>
+
 
 RF24 radio(7,8);
 byte addresses[][6] = {"T_15"};
@@ -19,6 +21,7 @@ void setup(){
 	servo_setup();
 	wireless_setup(radio_number);
   Serial.begin(9600);
+  printf_begin();
 }
 
 
@@ -30,9 +33,9 @@ void loop(){
   Serial.print(" and ");
   Serial.println(readings.right);
 	set_motor(0,readings.left);
-	set_motor(1,readings.right);
+	//set_motor(1,readings.right);
 	delay(100);
-  
+    
 	
 }
 
@@ -40,7 +43,7 @@ void loop(){
 void wireless_setup(int radio_number){
 	radio.begin();
   radio.setChannel(15);
-  radio.setPALevel(RF24_PA_MAX);
+  radio.setPALevel(RF24_PA_MIN);
   radio.setDataRate(RF24_250KBPS);
   if(radio_number){
     radio.openReadingPipe(1,addresses[0]);
@@ -76,7 +79,7 @@ void servo_setup(){
 // this function takes in a reading value
 // 	assumed to be a 10 bit value(like an analog sensor would read)
 // 	and a motor, motor 0 changes oin 9, motor 1 change pin 10
-void set_motor(int motor, int speed){
+void set_motor(int motor, long speed){
 	if (motor == 0)
     if(speed > 40) OCR1A = 93;
 		else OCR1A = map(speed, 3, 40, 63,125);
