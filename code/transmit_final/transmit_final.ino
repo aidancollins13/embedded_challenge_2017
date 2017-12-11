@@ -20,15 +20,15 @@ Package readings;
 
 
 void setup(){
-  Serial.begin(115200); 
+  Serial.begin(9600); 
   printf_begin();
 	wireless_setup(radio_number);
 	sensor_setup();
 }
 
 void loop(){
-	readings.left = read_dist(0);
-  //readings.right = read_dist(1);
+	readings.left = read_dist(1);
+  readings.right = read_dist(0);
 	
 	send_readings();
 	delay(100);
@@ -90,6 +90,5 @@ void wireless_setup(int radio_number){
 void send_readings(){
   if(!radio.write(&readings, sizeof(readings)))
     Serial.println("WIRELESS\twrite failed");
-  radio.printDetails();
   
 }
