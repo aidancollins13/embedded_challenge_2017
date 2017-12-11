@@ -89,12 +89,12 @@ void set_motor(int motor, long speed){
 }
 
 void set_motor_simple(int motor, long speed){
-	if(speed > 0 && speed <15){
+	if(speed > 0 && speed <=15){
 		// full speed
 		if(motor) OCR1B = 125;
 		else OCR1A = 125;
 	}
-	else if(speed > 15 && speed < 30){
+	else if(speed > 15 && speed <=30){
 		// slow reverse
 		if(motor) OCR1B = 70;
 		else OCR1A = 70;
