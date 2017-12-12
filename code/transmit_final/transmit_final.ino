@@ -27,11 +27,11 @@ void setup(){
 }
 
 void loop(){
-	readings.left = read_dist(1);
-  readings.right = read_dist(0);
+	readings.left = read_dist(0);
+  readings.right = read_dist(1);
 	
 	send_readings();
-	delay(100);
+	delay(50);
 
 }
 

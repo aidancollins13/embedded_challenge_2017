@@ -32,9 +32,9 @@ void loop(){
   Serial.print(readings.left);
   Serial.print(" and ");
   Serial.println(readings.right);
-	set_motor(0,readings.left);
-	set_motor(1,readings.right);
-	delay(100);
+	set_motor_simple(0,readings.left);
+	set_motor_simple(1,readings.right);
+	delay(50);
     
 	
 }
@@ -91,13 +91,13 @@ void set_motor(int motor, long speed){
 void set_motor_simple(int motor, long speed){
 	if(speed > 0 && speed <=15){
 		// full speed
-		if(motor) OCR1B = 125;
-		else OCR1A = 125;
+		if(motor) OCR1B = 50;
+		else OCR1A = 50;
 	}
 	else if(speed > 15 && speed <=30){
 		// slow reverse
-		if(motor) OCR1B = 70;
-		else OCR1A = 70;
+		if(motor) OCR1B = 120;
+		else OCR1A = 120  ;
 	}
 	else if(speed > 40){
 		// stop
