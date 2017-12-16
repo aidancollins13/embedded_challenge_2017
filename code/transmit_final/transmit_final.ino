@@ -2,13 +2,13 @@
 #include<printf.h>
 #include"RF24.h"
 
-
+// This sets up the radio
 RF24 radio(7,8);
-byte addresses[][6] = {"T_15"};
+byte addresses[][6] = {"T_15"}; // because the receiver doesnt send back, we need one address
 int radio_number = 0; //transmit
 
-long s1,s0;
 
+// the motorControll struct to send
 struct motorControl
 {
  long left;
@@ -36,6 +36,9 @@ void loop(){
 }
 
 
+// this reads the correct sensor based on the input
+// the way the sensors work is that you write them low, then high, then low, and take find the time it takes for them to pulse back,
+// 		you can then calculate distance
 long read_dist(int sensor){
 	int trigPin, echoPin;
 	if(sensor){
@@ -72,6 +75,7 @@ void sensor_setup(){
 
 }
 
+//this sets up the wireless on channel 15 fot 250kb/s and oppens the correct pipe
 void wireless_setup(int radio_number){
 	radio.begin();
   radio.setChannel(15);
@@ -87,6 +91,7 @@ void wireless_setup(int radio_number){
 
 }
 
+// imply writes the readings to the radio pipe
 void send_readings(){
   if(!radio.write(&readings, sizeof(readings)))
     Serial.println("WIRELESS\twrite failed");

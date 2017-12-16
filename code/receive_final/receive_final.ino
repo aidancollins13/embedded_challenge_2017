@@ -4,10 +4,12 @@
 #include<printf.h>
 
 
+// set up radio on pins 7,8
 RF24 radio(7,8);
-byte addresses[][6] = {"T_15"};
+byte addresses[][6] = {"T_15"}; // because the receiver doesn't write back we only need one address
 int radio_number = 1; //receive
 
+// the motor Control struct to send/receove
 struct motorControl
 {
  long left;
@@ -40,6 +42,7 @@ void loop(){
 }
 
 
+// this sets up the wireless on channel 15 for 250Kb/s 
 void wireless_setup(int radio_number){
 	radio.begin();
   radio.setChannel(15);
@@ -55,6 +58,7 @@ void wireless_setup(int radio_number){
 
 }
 
+// simply loads the readings structure with the readings
 void get_readings(){
   if(radio.available()){
     while(radio.available()){
@@ -88,6 +92,8 @@ void set_motor(int motor, long speed){
 		else OCR1B = map(speed, 3, 40, 63, 125);
 }
 
+// this is a modified set motor function with that is easier to conrtoll
+	// it only has forward and reverse 
 void set_motor_simple(int motor, long speed){
 	if(speed > 0 && speed <=15){
 		// full speed
