@@ -28,7 +28,7 @@ void setup(){
 
 void loop(){
 	readings.left = read_dist(0);
-  readings.right = read_dist(1);
+  readings.right = read_dist(11);
 	
 	send_readings();
 	delay(50);
